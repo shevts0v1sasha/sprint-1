@@ -5,6 +5,7 @@ import {
   Response,
 } from 'express';
 import jwt from 'jsonwebtoken';
+import { log } from 'node:console';
 import { JWT_SECRET } from '../config';
 import BadRequestError from '../errors/bad-request-error';
 import ConflictError from '../errors/conflict-error';
@@ -19,12 +20,11 @@ const login = (req: Request, res: Response, next: NextFunction) => {
 
       res
         .cookie('jwt', token, {
-
           maxAge: 3600000,
           httpOnly: true,
           sameSite: true,
         })
-        .send({ data: user.toJSON() });
+        .send({ token });
     })
     .catch(next);
 };
@@ -57,6 +57,7 @@ const getUsers = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getUserData = (id: string, res: Response, next: NextFunction) => {
+  log('get user data id= ', id);
   User.findById(id)
     .orFail(() => new NotFoundError('Пользователь по заданному id отсутствует в базе'))
     .then((users) => res.send({ data: users }))

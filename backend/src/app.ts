@@ -9,8 +9,11 @@ import { DB_ADDRESS } from './config';
 import errorHandler from './middlewares/error-handler';
 import routes from './routes';
 
-const { PORT = 3000 } = process.env;
+const cors = require('cors');
+
+const { PORT = 3001 } = process.env;
 const app = express();
+app.use(cors());
 mongoose.connect(DB_ADDRESS);
 
 app.use(express.json());
